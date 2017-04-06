@@ -1,12 +1,21 @@
 /* jshint asi: true */
 /* jshint esnext: true */
 
-var fs = require('fs')
-var ws = require('ws')
-var crypto = require('crypto')
+var fs = require('fs');
+var ws = require('ws');
+var crypto = require('crypto');
+var express = require('express');
+var app = express();
 
+// app.get('/', function(req, res){
+// 	var uid = req.params.uid,
+// 	path = req.params[0] ? req.params[0] : 'index.html';
+// 	res.sendFile(path, {root: "./client"});
+// });
+app.use(express.static('client'));
+app.listen(80);
 
-var config = {}
+var config = {};
 function loadConfig(filename) {
 	try {
 		var data = fs.readFileSync(filename, 'utf8')
@@ -18,11 +27,11 @@ function loadConfig(filename) {
 	}
 }
 
-var configFilename = 'config.json'
-loadConfig(configFilename)
+var configFilename = 'config.json';
+loadConfig(configFilename);
 fs.watchFile(configFilename, {persistent: false}, function() {
 	loadConfig(configFilename)
-})
+});
 
 
 var server = new ws.Server({host: config.host, port: config.port})
